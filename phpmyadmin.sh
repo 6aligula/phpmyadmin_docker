@@ -61,8 +61,22 @@ EOF
 
 function crear_docker_compose() {
     echo "Creando archivo docker-compose.yml..."
-    cat <<EOF > "${PROJECT_NAME}/../docker-compose.yml"
-# Contenido omitido para brevedad. Asegúrate de reemplazarlo con tu configuración actual.
+    cat <<EOF > "${PROJECT_NAME}/docker-compose.yml"
+version: '3.8'
+
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi
+
+  fastapi:
+    build: ./fastapi
+    ports:
+      - "8000:80"
+
 EOF
     return 0
 }

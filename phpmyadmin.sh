@@ -1,14 +1,18 @@
 #!/bin/bash
 
-# Create the project directory structure
-mkdir -p my_project/nginx my_project/fastapi
-cd my_project
+# Definiciones básicas
+PROJECT_NAME="my_project"
+NGINX_DIR="${PROJECT_NAME}/nginx"
+FASTAPI_DIR="${PROJECT_NAME}/fastapi"
 
-# Create the nginx configuration
-cat <<EOF > nginx/default.conf
+# Crear la estructura de directorios del proyecto
+mkdir -p "${NGINX_DIR}" "${FASTAPI_DIR}" || exit 1
+
+# Nginx configuration
+cat <<EOF > "${NGINX_DIR}/default.conf"
 server {
     listen 80;
-    server_name my_project;
+    server_name ${PROJECT_NAME};
 
     location / {
         proxy_pass http://fastapi:8000;
@@ -16,14 +20,14 @@ server {
 }
 EOF
 
-# Create the Dockerfile for Nginx in the nginx directory
-cat <<EOF > nginx/Dockerfile
+# Dockerfile para Nginx
+cat <<EOF > "${NGINX_DIR}/Dockerfile"
 FROM nginx
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 EOF
 
-# Create the FastAPI main.py file in the fastapi directory
-cat <<EOF > fastapi/main.py
+# FastAPI main.py
+cat <<EOF > "${FASTAPI_DIR}/main.py"
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -33,26 +37,21 @@ def read_root():
     return {"Hello": "World"}
 EOF
 
-# Create the Dockerfile for FastAPI in the fastapi directory
-# It now explicitly specifies how to start Uvicorn
-cat <<EOF > fastapi/Dockerfile
+# Dockerfile para FastAPI
+cat <<EOF > "${FASTAPI_DIR}/Dockerfile"
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 COPY . /app
 
-# Specify the command to run Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
 EOF
 
-# Return to the root directory of the project to create docker-compose.yml
-cd ..
-
-# Create the docker-compose.yml file
-cat <<EOF > docker-compose.yml
+# Crear docker-compose.yml en el directorio raíz del proyecto
+cat <<EOF > "${PROJECT_NAME}/../docker-compose.yml"
 version: '3'
 
 services:
   nginx:
-    build: ./my_project/nginx
+    build: ./${NGINX_DIR}
     ports:
       - "80:80"
     depends_on:
@@ -77,9 +76,9 @@ services:
       - "8080:80"
 
   fastapi:
-    build: ./my_project/fastapi
+    build: ./${FASTAPI_DIR}
     volumes:
-      - ./my_project/fastapi:/app
+      - ./${FASTAPI_DIR}:/app
     ports:
       - "8000:8000"
     depends_on:
@@ -89,5 +88,5 @@ volumes:
   mysql_data:
 EOF
 
-# Build and run the containers
-docker-compose up --build
+# Nota para el usuario final
+echo "Estructura del proyecto creada. Usa 'docker-compose up --build' para construir y arrancar los contenedores."

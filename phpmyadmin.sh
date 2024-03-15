@@ -22,7 +22,7 @@ FROM nginx
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 EOF
 
-# Create the FastAPI main.py file
+# Create the FastAPI main.py file in the fastapi directory
 cat <<EOF > fastapi/main.py
 from fastapi import FastAPI
 
@@ -34,9 +34,13 @@ def read_root():
 EOF
 
 # Create the Dockerfile for FastAPI in the fastapi directory
+# It now explicitly specifies how to start Uvicorn
 cat <<EOF > fastapi/Dockerfile
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 COPY . /app
+
+# Specify the command to run Uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
 EOF
 
 # Return to the root directory of the project to create docker-compose.yml

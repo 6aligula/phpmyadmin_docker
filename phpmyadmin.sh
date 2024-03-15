@@ -22,6 +22,17 @@ FROM nginx
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 EOF
 
+# Create the FastAPI main.py file
+cat <<EOF > fastapi/main.py
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+EOF
+
 # Create the Dockerfile for FastAPI in the fastapi directory
 cat <<EOF > fastapi/Dockerfile
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8

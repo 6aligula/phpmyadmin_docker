@@ -60,8 +60,12 @@ EOF
 }
 
 function crear_docker_compose() {
-    echo "Creando archivo docker-compose.yml..."
-    cat <<EOF > "${PROJECT_NAME}/docker-compose.yml"
+    if [ -f "${PROJECT_NAME}/docker-compose.yml" ]; then
+        echo "El archivo docker-compose.yml ya existe."
+        return 1
+    else
+        echo "Creando archivo docker-compose.yml..."
+        cat <<EOF > "${PROJECT_NAME}/docker-compose.yml"
 version: '3.8'
 
 services:
@@ -78,7 +82,8 @@ services:
       - "8000:80"
 
 EOF
-    return 0
+        return 0
+    fi
 }
 
 function mostrar_mensaje_final() {

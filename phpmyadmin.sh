@@ -91,8 +91,14 @@ function mostrar_mensaje_final() {
     return 0
 }
 
+function ejecutar_procesos() {
+    echo "Ejecutando procesos..."
+    cd "${PROJECT_NAME}" && docker-compose up --build
+    return 0
+}
+
 # Control de flujo principal del script
-crear_estructura_directorios && configurar_nginx && crear_dockerfile_nginx && crear_aplicacion_fastapi && crear_dockerfile_fastapi && crear_docker_compose && mostrar_mensaje_final || {
+crear_estructura_directorios && configurar_nginx && crear_dockerfile_nginx && crear_aplicacion_fastapi && crear_dockerfile_fastapi && crear_docker_compose && mostrar_mensaje_final && ejecutar_procesos || {
     echo "Error: El proceso falló. Verifica los mensajes de error anteriores para más detalles."
     exit 1
 }

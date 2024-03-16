@@ -46,13 +46,12 @@ function crear_aplicacion_fastapi() {
     # Crear el archivo main.py
     cat <<EOF > "${FASTAPI_DIR}/main.py"
 from fastapi import FastAPI
-from fastapi.responses import Response
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    html_content = """
+    return """
     <html>
         <head>
             <title>Hola, mundo en FastAPI</title>
@@ -69,8 +68,6 @@ def read_root():
             </footer>
         </body>
     </html>
-    """
-    return Response(content=html_content, media_type="text/html")
     """
 EOF
 

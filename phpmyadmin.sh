@@ -5,6 +5,9 @@ PROJECT_NAME="my_project"
 NGINX_DIR="${PROJECT_NAME}/nginx"
 FASTAPI_DIR="${PROJECT_NAME}/fastapi"
 
+# Obtener la primera IP de la máquina
+SERVER_IP=$(hostname -I | awk '{print $1}')
+
 function crear_estructura_directorios() {
     echo "Creando estructura de directorios..."
     mkdir -p "${NGINX_DIR}" "${FASTAPI_DIR}" && return 0 || return 1
@@ -18,7 +21,7 @@ server {
     server_name ${PROJECT_NAME};
 
     location / {
-        proxy_pass http://188.132.129.3:8000;
+        proxy_pass http://${SERVER_IP}:8000;
     }
 }
 EOF

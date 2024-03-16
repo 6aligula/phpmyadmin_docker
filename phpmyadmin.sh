@@ -52,22 +52,15 @@ app = FastAPI()
 @app.get("/")
 def read_root():
     return """
-    <html>
-        <head>
-            <title>Hola, mundo en FastAPI</title>
-        </head>
-        <body>
-            <header>
-                <h1>Encabezado</h1>
-            </header>
-            <main>
-                <h1>Hola, mundo!</h1>
-            </main>
-            <footer>
-                <p>Pie de página</p>
-            </footer>
-        </body>
-    </html>
+    <!DOCTYPE html>
+<html>
+  <head>
+    <title>Hola, Mundo</title>
+  </head>
+  <body>
+    <h1>Hola, mundo!</h1>
+  </body>
+</html>
     """
 EOF
 

@@ -53,21 +53,13 @@ app = FastAPI()
 def read_root():
     return """
     <html>
-        <head>
-            <title>Hola, mundo en FastAPI</title>
-        </head>
-        <body>
-            <header>
-                <h1>Encabezado</h1>
-            </header>
-            <main>
-                <h1>Hola, mundo!</h1>
-            </main>
-            <footer>
-                <p>Pie de página</p>
-            </footer>
-        </body>
-    </html>
+
+<head>\n <title>Hola, mundo en FastAPI</title>\n </head>\n
+
+<body>\n <header>\n <h1>Encabezado</h1>\n </header>\n <main>\n <h1>Hola, mundo!</h1>\n </main>\n <footer>\n <p>Pie de
+            página</p>\n </footer>\n </body>\n
+
+</html>
     """
 EOF
 

@@ -47,25 +47,42 @@ function crear_aplicacion_fastapi() {
     fi
 
     # Crear el archivo main.py
-# Crear el archivo main.py
+echo "Creando aplicación FastAPI..."
+   
+    # Verificar si el directorio existe
+    if [ ! -d "${FASTAPI_DIR}" ]; then
+        echo "El directorio ${FASTAPI_DIR} no existe. Creándolo ahora..."
+        mkdir -p "${FASTAPI_DIR}" || { echo "Error al crear el directorio ${FASTAPI_DIR}"; return 1; }
+    fi
+
+    # Crear el archivo main.py
 cat <<EOF > "${FASTAPI_DIR}/main.py"
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
+# Monta la carpeta 'static' en la ruta '/static'
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 @app.get("/")
-def read_root():
-    html_content = """
-    <html>
-        <head>
-            <title>Hola, mundo en FastAPI</title>
-        </head>
-        <body>
-            <h1>Hola, mundo!</h1>
-        </body>
-    </html>
-    """
-    return html_content
+async def read_root():
+    return {"message": "Hola, mundo desde FastAPI"}
+EOF
+
+    # Crear la carpeta 'static' y un ejemplo de archivo HTML
+    mkdir -p "${FASTAPI_DIR}/static"
+    cat <<EOF > "${FASTAPI_DIR}/static/index.html"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hola, mundo en FastAPI</title>
+</head>
+<body>
+    <h1>Hola, mundo!</h1>
+    <p>Esto es una página servida desde FastAPI usando archivos estáticos.</p>
+</body>
+</html>
 EOF
 
     echo "Aplicación FastAPI creada exitosamente en ${FASTAPI_DIR}"

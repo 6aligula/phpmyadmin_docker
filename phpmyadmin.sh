@@ -51,7 +51,16 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return """
+    <html>
+        <head>
+            <title>Hola, mundo en FastAPI</title>
+        </head>
+        <body>
+            <h1>Hola, mundo!</h1>
+        </body>
+    </html>
+    """
 EOF
 
     echo "Aplicación FastAPI creada exitosamente en ${FASTAPI_DIR}"

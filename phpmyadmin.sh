@@ -45,13 +45,17 @@ function crear_aplicacion_fastapi() {
 
     # Crear el archivo main.py
     cat <<EOF > "${FASTAPI_DIR}/main.py"
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return <p>Hola mundo<p>
+    html_content = """
+        <html>
+            <head>
+                <title>Hola, mundo en FastAPI</title>
+            </head>
+            <body>
+                <h1>Hola, mundo!</h1>
+            </body>
+        </html>
+        """
+        return html_content
 EOF
 
     echo "Aplicación FastAPI creada exitosamente en ${FASTAPI_DIR}"

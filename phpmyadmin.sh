@@ -18,7 +18,7 @@ server {
     server_name ${PROJECT_NAME};
 
     location / {
-        proxy_pass http://fastapi:8000;
+        proxy_pass http://188.132.129.3:8000;
     }
 }
 EOF

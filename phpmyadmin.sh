@@ -57,7 +57,15 @@ def read_root():
             <title>Hola, mundo en FastAPI</title>
         </head>
         <body>
-            <h1>Hola, mundo!</h1>
+            <header>
+                <h1>Encabezado</h1>
+            </header>
+            <main>
+                <h1>Hola, mundo!</h1>
+            </main>
+            <footer>
+                <p>Pie de página</p>
+            </footer>
         </body>
     </html>
     """

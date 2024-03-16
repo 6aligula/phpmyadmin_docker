@@ -46,31 +46,29 @@ function crear_aplicacion_fastapi() {
         mkdir -p "${FASTAPI_DIR}" || { echo "Error al crear el directorio ${FASTAPI_DIR}"; return 1; }
     fi
 
-    # Crear el archivo main.py
-# Crear el archivo main.py
+    # Crear el archivo main.py ajustado para FastAPI con archivos estáticos
 cat <<EOF > "${FASTAPI_DIR}/main.py"
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    html_content = """
-    <html>
-        <head>
-            <title>Hola, mundo en FastAPI</title>
-        </head>
-        <body>
-            <h1>Hola, mundo!</h1>
-        </body>
-    </html>
-    """
-    return html_content
+# Monta la carpeta 'static' en la ruta '/static'
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def read_root():
+    # Abre y devuelve el archivo index.html como respuesta HTML
+    with open('static/index.html', 'r') as f:
+        html_content = f.read()
+    return HTMLResponse(content=html_content, status_code=200)
 EOF
 
     echo "Aplicación FastAPI creada exitosamente en ${FASTAPI_DIR}"
     return 0
 }
+
 
 function crear_dockerfile_fastapi() {
     echo "Creando Dockerfile para FastAPI..."
@@ -121,8 +119,34 @@ function ejecutar_procesos() {
     return 0
 }
 
-# Control de flujo principal del script
-crear_estructura_directorios && configurar_nginx && crear_dockerfile_nginx && crear_aplicacion_fastapi && crear_dockerfile_fastapi && crear_docker_compose && mostrar_mensaje_final && ejecutar_procesos || {
+# Nueva función para configurar archivos estáticos
+function crear_archivos_estaticos() {
+    echo "Creando archivos estáticos..."
+   
+    # Crear la carpeta 'static' dentro del directorio de FastAPI
+    local STATIC_DIR="${FASTAPI_DIR}/static"
+    mkdir -p "${STATIC_DIR}"
+    
+    # Crear un archivo index.html básico dentro de la carpeta 'static'
+    cat <<EOF > "${STATIC_DIR}/index.html"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hola, mundo en FastAPI</title>
+</head>
+<body>
+    <h1>Hola, mundo!</h1>
+    <p>Esto es una página servida desde FastAPI usando archivos estáticos.</p>
+</body>
+</html>
+EOF
+
+    echo "Archivos estáticos creados en ${STATIC_DIR}"
+    return 0
+}
+
+# Modificar el control de flujo principal del script para incluir la nueva función
+crear_estructura_directorios && configurar_nginx && crear_dockerfile_nginx && crear_archivos_estaticos && crear_aplicacion_fastapi && crear_dockerfile_fastapi && crear_docker_compose && mostrar_mensaje_final && ejecutar_procesos || {
     echo "Error: El proceso falló. Verifica los mensajes de error anteriores para más detalles."
     exit 1
 }

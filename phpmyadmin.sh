@@ -36,6 +36,14 @@ EOF
 
 function crear_aplicacion_fastapi() {
     echo "Creando aplicación FastAPI..."
+   
+    # Verificar si el directorio existe
+    if [ ! -d "${FASTAPI_DIR}" ]; then
+        echo "El directorio ${FASTAPI_DIR} no existe. Creándolo ahora..."
+        mkdir -p "${FASTAPI_DIR}" || { echo "Error al crear el directorio ${FASTAPI_DIR}"; return 1; }
+    fi
+
+    # Crear el archivo main.py
     cat <<EOF > "${FASTAPI_DIR}/main.py"
 from fastapi import FastAPI
 
@@ -45,6 +53,8 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 EOF
+
+    echo "Aplicación FastAPI creada exitosamente en ${FASTAPI_DIR}"
     return 0
 }
 
